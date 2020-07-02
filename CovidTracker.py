@@ -28,6 +28,8 @@ with open('results.html', 'w') as file:
         <link rel="stylesheet" href="stylish.css">
       </head>
       <body>
+        <button onclick="swapTables()">Order by Name/# of cases</button>
+        <div id="nameTable" style="display:block;">
         <table>
             <tr>
                 <th>State:</th>
@@ -35,13 +37,47 @@ with open('results.html', 'w') as file:
             </tr>""")
     for state in states:
         file.write("""
-        <tr>
-            <td>"""+state+"""</td>
-            <td>"""+str(output[state])+"""</td>
-        </tr>""")
+            <tr>
+                <td>"""+state+"""</td>
+                <td>"""+str(output[state])+"""</td>
+            </tr>""")
     file.write("""
         </table>
+        </div>
+        <div id="caseTable" style="display:none;">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>State:</th>
+                <th>Number of cases:</th>
+            </tr>""")
+    output=list(output.items())
+    output.sort(key=lambda state: state[1], reverse=True)
+    rank=1 # I didn't want to make a nested for loop just to number the states' ranks
+    for stateTup in output:
+        file.write("""
+            <tr>
+                <td>"""+str(rank)+"""</td>
+                <td>"""+stateTup[0]+"""</td>
+                <td>"""+str(stateTup[1])+"""</td>
+            </tr>""")
+        rank+=1
+    file.write("""
+        </table>
+        </div>
+        <script>
+        function swapTables() {
+            if(document.getElementById("nameTable").style.display=="block") {
+                document.getElementById("nameTable").style.display = "none";
+                document.getElementById("caseTable").style.display = "block";
+            } else {
+                document.getElementById("nameTable").style.display = "block";
+                document.getElementById("caseTable").style.display = "none";
+            }
+        }
+        </script>
       </body>
     </html>""")
-
+# From what I read, this will only work on Windows but honestly that's okay because it's just being helpful
+# That and all the people I'm giving this to have Windows machines
 os.startfile(r"results.html")
